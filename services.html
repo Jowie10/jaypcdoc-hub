@@ -767,6 +767,41 @@
                 height: 45px;
             }
         }
+
+        /* ===== ADDED STYLES FOR SMOOTH SCROLL ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .product-section {
+            scroll-margin-top: 80px;
+        }
+        
+        .category-quick-nav {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 0 5%;
+        }
+        
+        .category-quick-nav a {
+            display: inline-block;
+            margin: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-blue);
+            border-radius: 30px;
+            color: var(--primary-blue);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .category-quick-nav a:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 118, 184, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -811,6 +846,14 @@
     <section class="product-showcase">
         <h2 class="section-title">Shop Our Products</h2>
         
+        <!-- ===== ADDED: Category Quick Navigation for Smooth Scroll ===== -->
+        <div class="category-quick-nav">
+            <a href="#laptops-section">Laptops</a>
+            <a href="#desktops-section">Desktops</a>
+            <a href="#accessories-section">Accessories</a>
+            <a href="#storage-section">Storage</a>
+        </div>
+        
         <!-- Category Tabs -->
         <div class="category-tabs">
             <button class="category-tab active" onclick="filterProducts('all')">All Products</button>
@@ -822,6 +865,11 @@
 
         <!-- Products Grid -->
         <div class="products-grid" id="productsGrid">
+            <!-- ===== ADDED: Laptops Section with ID ===== -->
+            <div id="laptops-section" class="product-section" style="grid-column: 1 / -1; text-align: center;">
+                <h2 style="color: var(--primary-blue); font-size: 2rem; margin: 2rem 0;">💻 Laptops</h2>
+            </div>
+            
             <!-- Dell XPS 15 -->
             <div class="product-card" data-category="laptops">
                 <span class="product-badge new">NEW</span>
@@ -922,6 +970,11 @@
                 </div>
             </div>
 
+            <!-- ===== ADDED: Desktops Section with ID ===== -->
+            <div id="desktops-section" class="product-section" style="grid-column: 1 / -1; text-align: center;">
+                <h2 style="color: var(--primary-blue); font-size: 2rem; margin: 2rem 0;">🖥️ Desktops</h2>
+            </div>
+
             <!-- HP Desktop -->
             <div class="product-card" data-category="desktops">
                 <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=400" alt="HP Desktop" class="product-image">
@@ -969,6 +1022,11 @@
                         <button class="btn-quick-view" onclick="quickView('mac-mini')"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
+            </div>
+
+            <!-- ===== ADDED: Accessories Section with ID ===== -->
+            <div id="accessories-section" class="product-section" style="grid-column: 1 / -1; text-align: center;">
+                <h2 style="color: var(--primary-blue); font-size: 2rem; margin: 2rem 0;">🖱️ Accessories</h2>
             </div>
 
             <!-- Logitech Mouse -->
@@ -1034,6 +1092,11 @@
                         <button class="btn-quick-view" onclick="quickView('arctis-nova-pro')"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
+            </div>
+
+            <!-- ===== ADDED: Storage Section with ID ===== -->
+            <div id="storage-section" class="product-section" style="grid-column: 1 / -1; text-align: center;">
+                <h2 style="color: var(--primary-blue); font-size: 2rem; margin: 2rem 0;">💾 Storage</h2>
             </div>
 
             <!-- Samsung SSD -->
@@ -1155,7 +1218,8 @@
             initScrollProgress();
             initBackToTop();
             initProductFilters();
-            initDarkMode(); // Initialize dark mode
+            initDarkMode();
+            initSmoothScroll(); // Initialize smooth scroll
         });
 
         // Loader
@@ -1305,6 +1369,47 @@
                 // Save preference
                 localStorage.setItem('darkMode', isDark);
                 console.log('Dark mode:', isDark ? 'ON' : 'OFF');
+            });
+        }
+
+        // ===== ADDED: Smooth Scroll Function =====
+        function initSmoothScroll() {
+            // Add click event to all anchor links that start with #
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Update URL without jumping
+                        history.pushState(null, null, targetId);
+                    }
+                });
+            });
+            
+            // Add click event to category quick nav links
+            document.querySelectorAll('.category-quick-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
         }
 
